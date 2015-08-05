@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class GameManager : MonoBehaviour {
@@ -10,16 +10,27 @@ public class GameManager : MonoBehaviour {
 	public GameStatus status; 
 
 
+	//Refs
+	public WeaponLibrary weaponLib;
+
 	void Awake () 
 	{
 		if (I != null){ //Manager already exists! just destroy this new one
 			GameObject.Destroy(this);
 		}else{
-			I = this;
-			DontDestroyOnLoad(gameObject);
+			Init();
 		}
 	}
 
+	private void Init()
+	{
+		I = this;
+		DontDestroyOnLoad(gameObject);
+
+		weaponLib = GetComponent<WeaponLibrary>();
+		Strings.Init();
+	}
+	
 
 
 	public void StartNewGame()
@@ -36,6 +47,13 @@ public class GameManager : MonoBehaviour {
 	public void LoadGame()
 	{
 
+	}
+
+
+	public void StartNextRound()
+	{
+		status.mapId++;
+		StartCoroutine(LoadAsync("Game"));
 	}
 
 

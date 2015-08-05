@@ -8,25 +8,34 @@ public class PreperationController : MonoBehaviour {
 	//GUI references
 	[SerializeField] RectTransform canvas;
 
+	[SerializeField] Transform inactive;
 
+	
 
 	[SerializeField] Text textGold;
 	[SerializeField] Text textHeroSouls;
 	[SerializeField] RectTransform layoutGroupHeroes;
 
 
+
+	[SerializeField] RectTransform panelHeroCreation;
+	[SerializeField] RectTransform panelHeroInfo;
+	[SerializeField] RectTransform panelGreyout;
+	[SerializeField] RectTransform panelWorldMap;
+	[SerializeField] RectTransform panelMapLevelInfo;
+
 	//Prefabs
-	[SerializeField] Transform panelHero;
-	[SerializeField] Transform panelHeroCreation;
-	[SerializeField] Transform panelHeroInfo;
-	[SerializeField] Transform panelGreyout;
-
-
+	[SerializeField] Transform panelHeroPrefab;
+	
 	//Variables
-	List<Transform> heroTList;
-	RectTransform heroCreationT;
-	RectTransform heroInfoT;
-	RectTransform greyoutT;
+	List<RectTransform> heroTList = new List<RectTransform>();
+
+	//Controlle refs
+	WorldMapController worldMapCtrl;
+
+	void Awake(){
+		worldMapCtrl = GetComponent<WorldMapController>();
+	}
 
 	void Start () 
 	{
@@ -34,32 +43,88 @@ public class PreperationController : MonoBehaviour {
 		textGold.text = "Gold: " + GameManager.I.status.gold;
 		textHeroSouls.text = "Hero Souls: " + GameManager.I.status.heroSouls;
 
-
+		//Create a single hero panel
+		RectTransform heroT = (RectTransform) Instantiate(panelHeroPrefab);
+		heroT.SetParent(layoutGroupHeroes);
+		heroTList.Add(heroT);
 	}
 	
 
 
-/***From UI***/
 
+	public void AcceptNewHero(Hero hero)
+	{
+		//Destroy greyout
+		DisablePanel(panelGreyout);
+
+		//Destroy creator panel
+		DisablePanel(panelHeroCreation);
+
+		//Activate and init existing hero panel with new hero
+		heroTList[heroTList.Count - 1].GetComponent<HeroPanelController>().Init(hero);
+
+		//Make new hero panel and add to group
+		RectTransform heroT = (RectTransform) Instantiate(panelHeroPrefab);
+		heroT.SetParent(layoutGroupHeroes);
+		heroTList.Add(heroT);
+
+		//Add hero to gameStatus
+		GameManager.I.status.heroes.Add(hero);
+	}
+	
 	public void AddHero()
 	{
-		//Disable background / grey out
-		greyoutT = (RectTransform) Instantiate(panelGreyout);
-		greyoutT.parent = canvas;
-		greyoutT.localPosition = Vector3.zero;
-		greyoutT.offsetMin = new Vector2(0, 0);
-		greyoutT.offsetMax = new Vector2(0, 0);
-//		greyoutT.SetSiblingIndex(5);
+		//Disable background / grey out //TODO set sibling index (layer)
+		EnablePanel (panelGreyout);
 
 		//Open hero creator panel
-		heroCreationT = (RectTransform) Instantiate(panelHeroCreation);
-		heroCreationT.parent = canvas;
-		heroCreationT.localPosition = Vector3.zero;
+		EnablePanel (panelHeroCreation);
 
 		//Init creator panel
-		heroCreationT.GetComponent<HeroCreationController>().InitPanel();
+		panelHeroCreation.GetComponent<HeroCreationPanelController>().InitPanel();
 
 	}
 
+
+	private void EnablePanel(RectTransform panel)
+	{
+		panel.SetParent(canvas);
+	}
+
+	private void DisablePanel(RectTransform panel)
+	{
+		panel.SetParent(inactive);
+	}
+
+	
+	/***FROM UI***/
+	public void OpenShop(){
+	
+	}
+
+	public void OpenMap()
+	{
+		//If map is already open, close map instead
+		if (panelWorldMap.parent == canvas.transform) {
+			DisablePanel(panelWorldMap);
+			DisablePanel(panelMapLevelInfo);
+			return;
+		}
+
+		//Close/hide other windows
+
+
+		//Open map window
+		EnablePanel(panelWorldMap);
+		
+		//Open map level info
+		EnablePanel(panelMapLevelInfo);
+
+		//Init map indicators
+		worldMapCtrl.InitMap();
+
+//		GameManager.I.StartNextRound();
+
+	}
 
 }
