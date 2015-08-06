@@ -14,7 +14,7 @@ public class HeroMeleeAI : AI{
 		Vector2 pos = unitCmd.transform.position;
 		unitCmd.GetComponent<Rigidbody2D>().gravityScale = 1;
 		state = AIState.MOVING;
-		if (goalPos.x != pos.x) unitCmd.turnedRight = goalPos.x > pos.x;
+
 		
 		
 		//Check for enemies

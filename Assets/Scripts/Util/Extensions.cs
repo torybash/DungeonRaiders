@@ -1,7 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
-public class Extensions {
+public static class Extensions {
+
+	
+	public static IList<T> Clone<T>(this IList<T> listToClone) where T: ICloneable
+	{
+		return listToClone.Select(item => (T)item.Clone()).ToList();
+	}
+
 }
 
 public static class Vector3Extension {
@@ -40,3 +50,4 @@ public static class Vector3Extension {
 		return new Vector2(parent.x, parent.y);
 	}
 }
+

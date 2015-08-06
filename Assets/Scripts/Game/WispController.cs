@@ -35,7 +35,7 @@ public class WispController : MonoBehaviour {
 
 			RaycastHit2D hit = Physics2D.Raycast(wispT.position, -Vector2.up); //TODO RAYCAST SHOULD ONLY TARGET FLOOR
 			if (hit.collider != null) { 
-				Debug.Log("Raycasthit: " + hit.collider + ", ypos: " + (hit.collider.transform.position.y + 1.0f));
+//				Debug.Log("Raycasthit: " + hit.collider + ", ypos: " + (hit.collider.transform.position.y + 1.0f));
 				wispGroundedPos = new Vector2(wispT.position.x, hit.collider.transform.position.y + 1.0f);
 			}
 		}

@@ -96,6 +96,20 @@ public class PreperationController : MonoBehaviour {
 		panel.SetParent(inactive);
 	}
 
+
+
+	public void ShowLevelInfo(WorldLevel worldLevel)
+	{	
+		//Open map level info
+		EnablePanel(panelMapLevelInfo);
+
+		//Init panel with level info
+		panelMapLevelInfo.GetComponent<MapLevelInfoPanel>().InitPanel(worldLevel);
+	}
+
+	public void StartRound(int levelId){
+		GameManager.I.StartLevel(levelId);
+	}
 	
 	/***FROM UI***/
 	public void OpenShop(){
@@ -116,15 +130,15 @@ public class PreperationController : MonoBehaviour {
 
 		//Open map window
 		EnablePanel(panelWorldMap);
-		
-		//Open map level info
-		EnablePanel(panelMapLevelInfo);
+
 
 		//Init map indicators
 		worldMapCtrl.InitMap();
 
-//		GameManager.I.StartNextRound();
+//		
 
 	}
+
+
 
 }

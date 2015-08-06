@@ -30,12 +30,12 @@ public class AI {
 				unitCmd.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 				break;
 			}//Move away from other heroes
-			else if (coll.tag.Equals("Hero"))
-			{
-				float xDiff = coll.transform.position.x - pos.x;
-				float xForce = xDiff == 0 ? 0 : 0.1f/xDiff;
-				totXForce -= xForce;
-			}
+//			else if (coll.tag.Equals("Hero"))
+//			{
+//				float xDiff = coll.transform.position.x - pos.x;
+//				float xForce = xDiff == 0 ? 0 : 0.1f/xDiff;
+//				totXForce -= xForce;
+//			}
 		}
 		
 		
@@ -47,9 +47,9 @@ public class AI {
 		}
 		
 		//Apply hero-distancer force
-		if (totXForce > 0.1) totXForce = 0.1f;
-		if (totXForce < -0.1) totXForce = -0.1f;
-		if ((moveVec.x > 0 && totXForce < 0) || (moveVec.x < 0 && totXForce > 0)) moveVec.x += totXForce;
+//		if (totXForce > 0.1) totXForce = 0.1f;
+//		if (totXForce < -0.1) totXForce = -0.1f;
+//		if ((moveVec.x > 0 && totXForce < 0) || (moveVec.x < 0 && totXForce > 0)) moveVec.x += totXForce;
 		
 		return moveVec;
 	}
@@ -83,30 +83,31 @@ public class AI {
 		else unitCmd.turnedRight = false;
 		
 		//Move towards enemy
-		float goalPosX = closestMonster.position.x + (unitCmd.turnedRight ? -1 : 1) * 0.75f;
+		float distToEnemy = 0.75f; //TODO
+		float goalPosX = closestMonster.position.x + (unitCmd.turnedRight ? -1 : 1) * distToEnemy;
 		moveVec.x = Mathf.MoveTowards(pos.x, goalPosX, 0.1f) - pos.x;
 		
 		//		Debug.Log("pos: " + pos + ", closestMonster.position: " + closestMonster.position + ", closestDist: " + closestDist + " , moveVec:  "+ moveVec);
 		
 		//keep distance to fellow heroes
-		Vector2 upperLeft = new Vector2(pos.x - 0.1f, pos.y + 0.5f);
-		Vector2 lowerRight = new Vector2(pos.x + 0.1f, pos.y - 0.5f);
-		Collider2D[] colliders = Physics2D.OverlapAreaAll(upperLeft, lowerRight);
-		
-		float totXForce = 0;
-		foreach (Collider2D coll in colliders) {
-			
-			if (coll.tag.Equals("Hero"))
-			{
-				float xDiff = coll.transform.position.x - pos.x;
-				float xForce = xDiff == 0 ? 0 : 0.1f/xDiff;
-				totXForce -= xForce;
-			}
-		}
-		//Apply hero-distancer force
-		if (totXForce > 0.1) totXForce = 0.1f;
-		if (totXForce < -0.1) totXForce = -0.1f;
-		if ((moveVec.x > 0 && totXForce < 0) || (moveVec.x < 0 && totXForce > 0)) moveVec.x += totXForce;
+//		Vector2 upperLeft = new Vector2(pos.x - 0.1f, pos.y + 0.5f);
+//		Vector2 lowerRight = new Vector2(pos.x + 0.1f, pos.y - 0.5f);
+//		Collider2D[] colliders = Physics2D.OverlapAreaAll(upperLeft, lowerRight);
+//		
+//		float totXForce = 0;
+//		foreach (Collider2D coll in colliders) {
+//			
+//			if (coll.tag.Equals("Hero"))
+//			{
+//				float xDiff = coll.transform.position.x - pos.x;
+//				float xForce = xDiff == 0 ? 0 : 0.1f/xDiff;
+//				totXForce -= xForce;
+//			}
+//		}
+//		//Apply hero-distancer force
+//		if (totXForce > 0.1) totXForce = 0.1f;
+//		if (totXForce < -0.1) totXForce = -0.1f;
+//		if ((moveVec.x > 0 && totXForce < 0) || (moveVec.x < 0 && totXForce > 0)) moveVec.x += totXForce;
 		
 		return moveVec;
 	}

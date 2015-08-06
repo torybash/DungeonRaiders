@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class GameStatus {
 
-	public int mapId; //TODO: more advanced
+	public int currLevelID; //TODO: more advanced
 
 	public int gold;
 	public int heroSouls;
@@ -16,7 +16,7 @@ public class GameStatus {
 
 
 	public GameStatus(){
-		mapId = -1;
+		currLevelID = -1;
 		gold = 0;
 		heroSouls = 2;
 

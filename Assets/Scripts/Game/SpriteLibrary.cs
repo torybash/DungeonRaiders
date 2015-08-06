@@ -37,6 +37,8 @@ public class SpriteLibrary : MonoBehaviour {
 		return monsterAnimatorsDict[monsterType];
 	}
 
+
+
 }
 
 

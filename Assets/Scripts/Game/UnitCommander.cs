@@ -18,9 +18,16 @@ public class UnitCommander : MonoBehaviour {
 
 	public Weapon weapon;
 
+	protected Sprite projectileSprite;
+
 
 	//Refs
 	protected GameController gameCtrl;
+
+
+	//Prefabs
+	[SerializeField] protected Transform projectilePrefab;
+
 
 	protected void Awoken(){
 		gameCtrl = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
@@ -39,9 +46,26 @@ public class UnitCommander : MonoBehaviour {
 
 		health -= 5; //DEBUG TODO
 
+		if (health <= 0) Die ();
+
 		Debug.Log("GOT HIT - (vec: " + (new Vector2(-xDir * 1f, 1.5f)) + " ---- time: "+ Time.time);
 
 
+	}
+
+
+	protected void Die()
+	{
+		//TODO Play death animation
+
+		GetComponent<Collider2D>().enabled = false;
+
+
+		//TODO more elegantly? + handle heroes
+		if (this.GetType() == typeof(MonsterCommander)){
+			Timer.DelayedExecute(() => {GameObject.Destroy(gameObject); gameCtrl.unitCtrl.MonsterKilled((MonsterCommander)this);}, 1.5f);
+		}
+		
 	}
 
 

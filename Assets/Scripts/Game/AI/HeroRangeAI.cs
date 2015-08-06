@@ -15,10 +15,10 @@ public class HeroRangeAI : AI {
 		if (goalPos.x != pos.x) unitCmd.turnedRight = goalPos.x > pos.x;
 		
 		
-		//Check for enemies
+		//Check for enemies //TODO DO BETTER
 		float directionX = unitCmd.turnedRight ? 1f : -1f;
 		Vector2 inFrontUpperLeft = new Vector2(pos.x + directionX * 0.5f, pos.y + 0.5f);
-		Vector2 inFrontLowerRight = new Vector2(pos.x + directionX * 0.9f, pos.y - 0.5f);
+		Vector2 inFrontLowerRight = new Vector2(pos.x + directionX * 4.0f, pos.y - 0.5f);
 		Collider2D[] inFrontColliders = Physics2D.OverlapAreaAll(inFrontUpperLeft, inFrontLowerRight);
 		foreach (Collider2D coll in inFrontColliders) {
 			if (coll.tag.Equals("Monster")){
@@ -33,7 +33,8 @@ public class HeroRangeAI : AI {
 			moveVec = Movement(unitCmd, goalPos);
 			break;
 		case AIState.ATTACKING:
-			moveVec = AttackMove(unitCmd, inFrontColliders);
+			
+//			moveVec = AttackMove(unitCmd, inFrontColliders);
 			break;
 			
 		default:

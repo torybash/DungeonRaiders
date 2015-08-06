@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class UnitController : MonoBehaviour {
 
@@ -15,6 +16,10 @@ public class UnitController : MonoBehaviour {
 	//Controller ref
 	private GameController gameCtrl;
 
+
+	void Awake(){
+		gameCtrl = GetComponent<GameController>();
+	}
 
 	public void SpawnHeroes(Vector2 pos)
 	{
@@ -39,11 +44,52 @@ public class UnitController : MonoBehaviour {
 
 	public void GFixedUpdate()
 	{
-		foreach (HeroCommander heroCmd in heroCommanders) {
-			heroCmd.GFixedUpdate();
+		//Update heroes, sort first by position
+		List<HeroCommander> sortedHeroCommanders = heroCommanders.OrderBy(o=>o.hero.position).ToList();
+
+		print ("Update unit controller");
+		HeroCommander lastHeroCmd = null;
+		foreach (HeroCommander heroCmd in sortedHeroCommanders) {
+			heroCmd.GFixedUpdate(lastHeroCmd);
+			lastHeroCmd = heroCmd;
+			print ("Hero: " + heroCmd.hero.heroName + ", pos: "+ heroCmd.hero.position);
+
 		}
 		foreach (MonsterCommander monsterCmd in monsterCommanders) {
 			monsterCmd.GFixedUpdate();
 		}
 	}
+
+	public void MonsterKilled(MonsterCommander monsterCmd){
+		monsterCommanders.Remove(monsterCmd);
+	}
+
+
+
+	public void HeroPositionChange(Hero hero, int change)
+	{
+		Debug.Log("HeroPositionUp -- BEFORE - hero.pos: " + hero.position);
+
+		foreach (var item in GameManager.I.status.heroes) {
+			print ("hero: " + item.heroName + " , pos: "+ item.position);
+		}
+
+		//Change position for other hero (who was in the new position)
+		Hero otherHero = GameManager.I.status.heroes.Find(x => x.position == (hero.position + change));
+		otherHero.position -= change;
+		heroCommanders[otherHero.id].PositionChanged();
+		
+		//Change position for hero
+		hero.position += change;
+		heroCommanders[hero.id].PositionChanged();
+
+		print ("AFTER - hero.pos: " + hero.position);
+		foreach (var item in GameManager.I.status.heroes) {
+			print ("hero: " + item.heroName + " , pos: "+ item.position);
+		}
+
+		//Update UI
+		gameCtrl.gameUICtrl.UpdateGameHeroesPanel();
+	}
+	
 }

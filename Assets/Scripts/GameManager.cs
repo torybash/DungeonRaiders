@@ -50,9 +50,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 
-	public void StartNextRound()
+	public void StartLevel(int levelId)
 	{
-		status.mapId++;
+		status.currLevelID = levelId;
 		StartCoroutine(LoadAsync("Game"));
 	}
 

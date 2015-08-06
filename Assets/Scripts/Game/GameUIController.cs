@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,12 +9,18 @@ public class GameUIController : MonoBehaviour {
 	//UI refs
 	[SerializeField] Transform canvas;
 
+	[SerializeField] Transform layoutGroupGameHeroes;
+
 
 	//Prefabs
 	[SerializeField] Transform healthBarPrefab;
+	[SerializeField] Transform gameHeroPanelPrefab;
 
 	//Refs
 	private Dictionary<int, Transform> healthBarDict = new Dictionary<int, Transform>();
+
+	private Dictionary<int, GameHeroPanel> gameHeroPanels = new Dictionary<int, GameHeroPanel>();
+
 
 	public void UpdateHealthBar(UnitCommander unitCmd)
 	{
@@ -49,4 +56,45 @@ public class GameUIController : MonoBehaviour {
 
 		return color;
 	}
+
+
+	public void Init()
+	{
+		//Maybe sort hero list by position //TODO
+
+		
+
+		//Add a panel for each hero
+		foreach (Hero hero in GameManager.I.status.heroes) {
+			Transform gameHeroPanelT = Instantiate(gameHeroPanelPrefab);
+			gameHeroPanelT.SetParent(layoutGroupGameHeroes);
+
+			//Init panel
+			gameHeroPanelT.GetComponent<GameHeroPanel>().Init(hero);
+
+			gameHeroPanels.Add(hero.id, gameHeroPanelT.GetComponent<GameHeroPanel>());
+		}
+
+		foreach (Hero hero in GameManager.I.status.heroes) {
+			gameHeroPanels[hero.id].GetComponent<RectTransform>().SetSiblingIndex(hero.position);
+		}
+
+
+		
+	}
+
+	public void UpdateGameHeroesPanel()
+	{
+		foreach (Hero hero in GameManager.I.status.heroes) {
+			gameHeroPanels[hero.id].GetComponent<RectTransform>().SetSiblingIndex(hero.position);
+			gameHeroPanels[hero.id].UpdateUI();
+		}
+	}
+
+
+	public void GFixedUpdate(){
+//		UpdateGameHeroesPanel();
+	}
 }
+
+

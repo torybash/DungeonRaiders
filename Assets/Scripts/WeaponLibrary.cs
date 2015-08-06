@@ -38,4 +38,5 @@ public class Weapon{
 	public float range;
 	public float critChance;
 	public AnimatorOverrideController animatorController;
+	public Sprite projectileSprite;
 }

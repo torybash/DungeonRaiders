@@ -58,6 +58,8 @@ public class HeroHelper  {
 		hero.maxMana = CalculateMaxMana(hero.intelligence);
 		hero.maxHP = CalculateMaxHP(hero.vitality);
 
+		hero.position = GameManager.I.status.heroes.Count;
+		hero.id = GameManager.I.status.heroes.Count;
 
 		return hero;
 	}

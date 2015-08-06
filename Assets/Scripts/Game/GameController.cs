@@ -34,8 +34,15 @@ public class GameController : MonoBehaviour {
 	private void InitRound()
 	{
 		//Get map 
-		mapCtrl.StartMap(GameManager.I.status.mapId);
+		mapCtrl.StartMap(GameManager.I.status.currLevelID);
+
+		gameUICtrl.Init();
+
+		camCtrl.Init();
 	}
+
+
+	
 
 
 	/*********************/
@@ -62,6 +69,7 @@ public class GameController : MonoBehaviour {
 		case GameState.RUNNING:
 			unitCtrl.GFixedUpdate();
 			camCtrl.GFixedUpdate();
+			gameUICtrl.GFixedUpdate();
 			break;
 
 		case GameState.ROUND_ENDED:

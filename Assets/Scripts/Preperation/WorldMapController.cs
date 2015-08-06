@@ -6,7 +6,8 @@ public class WorldMapController : MonoBehaviour {
 
 
 	[SerializeField] List<WorldLevel> worldLevels;
-	private Dictionary<int, MapIndicator> worldLevelsDict;
+	private Dictionary<int, WorldLevel> worldLevelsDict;
+	private Dictionary<MapIndicator, WorldLevel> worldLevelUsingIndicatorDict;
 
 	private MapIndicator hoveredIndicator = null;
 
@@ -18,9 +19,11 @@ public class WorldMapController : MonoBehaviour {
 	private PreperationController prepCtrl;
 
 	void Awake(){
-		worldLevelsDict = new Dictionary<int, MapIndicator>();
+		worldLevelsDict = new Dictionary<int, WorldLevel>();
+		worldLevelUsingIndicatorDict = new Dictionary<MapIndicator, WorldLevel>();
 		foreach (WorldLevel item in worldLevels) {
-			worldLevelsDict.Add (item.levelID, item.indicator);
+			worldLevelsDict.Add (item.levelID, item);
+			worldLevelUsingIndicatorDict.Add (item.indicator, item);
 		}
 
 		prepCtrl = GetComponent<PreperationController>();
@@ -52,11 +55,11 @@ public class WorldMapController : MonoBehaviour {
 		}
 
 		//Open first level
-		worldLevelsDict[0].SetOpen();
+		worldLevelsDict[0].indicator.SetOpen();
 
 		//Show complted levels and paths
 		foreach (int levelID in levelsCompleted) {
-			worldLevelsDict[levelID].SetCompleted();
+			worldLevelsDict[levelID].indicator.SetCompleted();
 		}
 
 		//Enable Update 
@@ -96,7 +99,7 @@ public class WorldMapController : MonoBehaviour {
 
 	public void IndicatorClicked(MapIndicator indicator)
 	{
-
+		prepCtrl.ShowLevelInfo(worldLevelUsingIndicatorDict[indicator]);
 	}
 
 }
@@ -104,5 +107,7 @@ public class WorldMapController : MonoBehaviour {
 [System.Serializable]
 public class WorldLevel{
 	public int levelID;
+	public string levelName;
+	public string levelDescription;
 	public MapIndicator indicator;
 }

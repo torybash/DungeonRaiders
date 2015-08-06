@@ -1,2 +1,3 @@
 —Heroes cost souls
 -Cant start round without heroes
+-Destroy healthbars for dead units
